@@ -68,7 +68,7 @@ const Home = () => {
           const shuffled = shuffleAnswers(currentQn.correct_answer, currentQn.incorrect_answers);
           setShuffledAnswers(shuffled);
         }
-    }, [currentQnIndex]);
+    }, [qnData, currentQnIndex]);
 
     const handleNext = () => {
         setSelectedAnswer(null)
@@ -79,6 +79,10 @@ const Home = () => {
             setIsQuizCompleted(true)
             calculateScore(10, score);
         }
+    }
+
+    const handleBack = () => {
+        setSelectCategory(false)
     }
 
     const handleAnswerClick = (selectedOption) => {
@@ -95,7 +99,7 @@ const Home = () => {
     };
 
     const getOptionClass = (option) => {
-        let className= 'text-left cursor-pointer p-2 m-2 rounded-lg hover:scale-101 active:scale-[0.99] transition-all duration-300'
+        let className= 'text-left cursor-pointer p-5 my-2 rounded-lg hover:scale-101 active:scale-[0.99] transition-all duration-300'
         
         if (!answered) {
             // If not answered, keep default color
@@ -126,10 +130,9 @@ const Home = () => {
 
 
     return (
-        <div className="flex items-center justify-center min-h-screen w-1/2 mx-auto">
+        <div className="flex items-center justify-center -mt-10 w-1/2 mx-auto">
         <div className="w-full">
             <div className="w-3/4 mx-auto">
-                <h1 className="font-bold text-3xl m-3">Quiz App</h1>
                 {!selectCategory && <div>
                     <p className="font-semibold text-xl">Select a Quiz Category</p>
                     <ul className="flex flex-wrap justify-center items-center m-3">
@@ -139,7 +142,7 @@ const Home = () => {
                     </ul>
                 </div>}
             </div>
-            {!isQuizCompleted && showQns && qnData.length > 0 && (
+            {!isQuizCompleted && selectCategory && showQns && qnData.length > 0 && (
                 <div className="flex items-center justify-center">
                     <div className="w-full">
                         <h1 className="text-left text-2xl font-semibold my-3 w-full">{qnData[currentQnIndex].question}</h1>
@@ -165,7 +168,10 @@ const Home = () => {
                             </ul>
                             </div>
                         ))} */}
-                        <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleNext()}>Next</button>
+                        <div className="flex justify-between">
+                            <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleBack()}>Categories</button>
+                            <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleNext()}>Next</button>
+                        </div>
                     </div>
                 </div>
             )}
