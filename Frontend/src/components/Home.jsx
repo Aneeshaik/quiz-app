@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css'; 
 
 const Home = () => {
     const [data, setData] = useState([]);
@@ -11,6 +13,7 @@ const Home = () => {
     const [shuffledAnswers, setShuffledAnswers] = useState([]);
     const [selectedAnswer, setSelectedAnswer] = useState();
     const [answered, setAnswered] = useState(false)
+    const [calculatedScore, setCalculatedScore] = useState(0)
 
     const categories = [
         'General Knowledge',
@@ -74,6 +77,7 @@ const Home = () => {
             setCurrentQnIndex(currentQnIndex + 1)
         } else {
             setIsQuizCompleted(true)
+            calculateScore(10, score);
         }
     }
 
@@ -84,6 +88,9 @@ const Home = () => {
         if (selectedOption === currentQn.correct_answer) {
             setScore(score + 1); // Increment score if the selected answer is correct
         }
+        setTimeout(() => {
+            handleNext()
+        }, 2000)
         // handleNext(); // Move to the next question
     };
 
@@ -109,6 +116,14 @@ const Home = () => {
     return className;
     };
 
+    const calculateScore = (totalQuestions, correctAnswers) => {
+        if (totalQuestions === 0) {
+          setCalculatedScore(0);
+        }
+        setCalculatedScore( Number(((correctAnswers * 100) / totalQuestions).toFixed(2)) );
+      };
+      
+
 
     return (
         <div className="flex items-center justify-center min-h-screen w-1/2 mx-auto">
@@ -119,12 +134,12 @@ const Home = () => {
                     <p className="font-semibold text-xl">Select a Quiz Category</p>
                     <ul className="flex flex-wrap justify-center items-center m-3">
                         {categories.map((cat, index) => (
-                            <button key={index} onClick={() => handleClick(index + 1)} className="bg-slate-500 p-5 rounded-lg w-1/4 h-24 m-2 hover:scale-102 transition-all duration-300 active:scale-95">{cat}</button>
+                            <button key={index} onClick={() => handleClick(index + 1)} className="bg-slate-500 p-5 rounded-lg w-1/4 h-24 m-2 hover:scale-102 transition-all duration-300 active:scale-[0.97]">{cat}</button>
                         ))}
                     </ul>
                 </div>}
             </div>
-            {showQns && qnData.length > 0 && (
+            {!isQuizCompleted && showQns && qnData.length > 0 && (
                 <div className="flex items-center justify-center">
                     <div className="w-full">
                         <h1 className="text-left text-2xl font-semibold my-3 w-full">{qnData[currentQnIndex].question}</h1>
@@ -155,9 +170,26 @@ const Home = () => {
                 </div>
             )}
             {isQuizCompleted && (
-                <div>
-                    <h1 className="text-3xl font-bold m-3">Quiz Completed!</h1>
-                    <h1>The score is : {score}</h1>
+                <div className="flex flex-col items-center justify-center">
+                    <h1 className="text-3xl font-bold m-3 mt-0">Quiz Completed!</h1>
+                    <div className="flex space-x-3">
+                        <h1 className="bg-neutral-400 rounded-lg px-5 py-2">Total Questions: 10</h1>
+                        <h1 className="bg-neutral-400 rounded-lg px-5 py-2">Correct Answers: {score}</h1>
+                    </div>
+                    <div className="w-40 h-40 my-4 flex items-center justify-center">
+                        <CircularProgressbar
+                            value={calculatedScore}
+                            text={`${calculatedScore}%`}
+                            styles={buildStyles({
+                                textColor: '#000',
+                                pathColor: '#F59E0B',
+                                trailColor: '#FEE2E2',
+                                strokeLinecap: 'round',
+                                pathTransitionDuration: 0.5,
+                            })}
+                        />
+                    </div>
+                    <h1>Your Score</h1>
                 </div>
             )}
         </div>
