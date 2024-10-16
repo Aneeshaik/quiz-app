@@ -12,7 +12,7 @@ const Navbar = () => {
     },[])
 
     return (
-      <div className="flex items-center justify-center w-full mx-auto py-3 px-4 rounded-3xl m-4 bg-black/15">
+      <div className="flex items-center justify-center w-full mx-auto py-3 px-4 rounded-3xl m-4 bg-slate-300 dark:bg-white/15 backdrop-blur-sm">
         {console.log(user)}
         {user === "user" ? (
             <div className="flex justify-between w-full mx-5 items-center space-x-6">

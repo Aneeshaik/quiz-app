@@ -46,7 +46,7 @@ const App = () => {
         return <div>Loading....</div>
       }
   return (
-    <div className="App w-1/2 mx-auto relative h-screen flex flex-col">
+    <div className="App w-[95%] lg:w-1/2 mx-auto relative h-screen flex flex-col">
     <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -78,7 +78,7 @@ const RoutesWrapper = () => {
   const location = useLocation();
 
   return (
-    <div className={`w-full ${location.pathname === '/' ? 'flex-grow flex justify-center items-center -mt-10' : 'mt-0'}`}>
+    <div className={`w-full ${location.pathname === '/' ? 'flex-grow flex justify-center items-center -mt-5' : 'mt-0'}`}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<Profile />} />

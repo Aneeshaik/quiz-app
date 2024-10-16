@@ -1,3 +1,14 @@
+const mongoose = require('mongoose');
+const Question = require('../models/Question');
+const connectDB = require('../../db')
+
+connectDB()
+
+const insertData = async() => {
+    try{
+        const count = await Question.countDocuments();
+        if(count === 0) {
+
 const mockData = [
     // General Knowledge
     {
@@ -788,5 +799,17 @@ const mockData = [
         ]
     }
 ]
+    await Question.insertMany(mockData);
+      console.log('Mock data inserted successfully.');
+    } else {
+      console.log('Questions already exist in the database. Skipping insertion.');
+    }
+  } catch (error) {
+    console.error('Error inserting data:', error);
+  } finally {
+    mongoose.connection.close();
+  }
+}
 
-module.exports = mockData
+insertData();
+// module.exports = mockData

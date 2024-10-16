@@ -133,7 +133,9 @@ const SignIn = ({onSuccessfullLoggedIn}) => {
         
     }
     return (
-        <div className="flex justify-center items-center h-screen">
+        <div className="relative flex justify-center">
+            <h1 className="absolute text-3xl font-semibold cursor-pointer mt-5">Quiz App</h1>
+        <div className="flex flex-col justify-center items-center h-screen">
         <div className="m-2 flex justify-start">
             <form className="" onSubmit={login? handleSigninSubmit : handleSignupSubmit}>
                 <h1 className="mx-auto mb-4 text-3xl">{
@@ -158,7 +160,7 @@ const SignIn = ({onSuccessfullLoggedIn}) => {
                 {!login &&
                 <div className="m-4">
                 <label for="role" class="mr-4">Select Role:</label>
-                <select class="border cursor-pointer border-gray-300 px-2 py-1 rounded-md" name="userType" value={formData.userType} onChange={handleChange}>
+                <select class="border cursor-pointer text-black border-gray-300 px-2 py-1 rounded-md" name="userType" value={formData.userType} onChange={handleChange}>
                     <option className="cursor-pointer" value="user">User</option>
                     <option className="cursor-pointer" value="admin">Admin</option>
                 </select>
@@ -172,6 +174,7 @@ const SignIn = ({onSuccessfullLoggedIn}) => {
                 <p className="m-2">Created an account? <button onClick={handleClick} type="button" className="underline">Sign In</button></p>
                 }
             </form>
+        </div>
         </div>
         </div>
     )

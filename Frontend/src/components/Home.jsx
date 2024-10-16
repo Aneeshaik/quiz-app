@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css'; 
+import Result from "./Result";
 
 const Home = () => {
     const [data, setData] = useState([]);
@@ -105,13 +104,18 @@ const Home = () => {
                     score: score
                 }),
             })
-            const data = await response.json();
+            await response.json();
         }
         }
     }
 
     const handleBack = () => {
         setSelectCategory(false)
+    }
+
+    const handleHome = () => {
+        setSelectCategory(false)
+        setIsQuizCompleted(false)
     }
 
     const handleAnswerClick = (selectedOption) => {
@@ -121,10 +125,6 @@ const Home = () => {
         if (selectedOption === currentQn.correct_answer) {
             setScore(score + 1); // Increment score if the selected answer is correct
         }
-        // setTimeout(() => {
-        //     handleNext()
-        // }, 2000)
-        // handleNext(); // Move to the next question
     };
 
     const getOptionClass = (option) => {
@@ -167,20 +167,20 @@ const Home = () => {
 
 
     return (
-        <div className="flex items-center justify-center bg-white/15 backdrop-blur-sm p-5 rounded-2xl w-4/5 mx-auto">
+        <div className="flex items-center justify-center overflow-y-auto bg-slate-300 dark:bg-white/15 backdrop-blur-sm p-1 py-4 lg:p-5 rounded-2xl w-full lg:w-4/5 mx-auto">
         <div className="w-full">
             <div className="w-full mx-auto">
-                {!selectCategory && <div>
+                {!selectCategory && <div className="w-full">
                     <p className="font-semibold text-3xl">Select a Quiz Category</p>
                     <ul className="flex flex-wrap justify-center items-center m-3">
                         {categories.map((cat, index) => (
-                            <button key={index} onClick={() => handleClick(index + 1)} className={`${categoriesColors[index]} text-lg p-5 rounded-lg w-1/4 h-24 m-2 hover:scale-102 transition-all duration-300 active:scale-[0.97] shrink-0`}>{cat}</button>
+                            <button key={index} onClick={() => handleClick(index + 1)} className={`${categoriesColors[index]} text-lg text-center flex items-center justify-center p-1 lg:p-5 mt-3 rounded-lg w-2/5 sm:w-1/4 h-28 m-2 lg:m-5 hover:scale-102 transition-all duration-300 active:scale-[0.97] shrink-0`}>{cat}</button>
                         ))}
                     </ul>
                 </div>}
             </div>
             {!isQuizCompleted && selectCategory && showQns && qnData.length > 0 && (
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center p-2 py-0 lg:p-0">
                     <div className="w-full">
                         <h1 className="text-left text-2xl font-semibold my-3 w-full">{qnData[currentQnIndex].question}</h1>
                         <ul className="list-none w-full">
@@ -194,45 +194,16 @@ const Home = () => {
                                 </li>
                             ))}
                         </ul>
-                        {/* {qnData.map((qn) => (
-                            <div>
-                            <h1>{qn.question}</h1>
-                            <ul>
-                                <li>{qn.correct_answer}</li>
-                                {qn.incorrect_answers.map((option) => (
-                                    <li>{option}</li>
-                                ))}
-                            </ul>
-                            </div>
-                        ))} */}
                         <div className="flex justify-between">
-                            <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleBack()}>Categories</button>
-                            <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleNext()}> {currentQnIndex < qnData.length - 1 ? 'Next' : 'Submit'} </button>
+                            <button className="px-5 py-2 ml-0 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleBack()}>Categories</button>
+                            <button className="px-5 py-2 mr-0 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleNext()}> {currentQnIndex < qnData.length - 1 ? 'Next' : 'Submit'} </button>
                         </div>
                     </div>
                 </div>
             )}
             {isQuizCompleted && (
-                <div className="flex flex-col items-center justify-center">
-                    <h1 className="text-3xl font-bold m-3 mt-0">Quiz Completed!</h1>
-                    <div className="flex space-x-3">
-                        <h1 className="bg-neutral-400 rounded-lg px-5 py-2">Total Questions: 10</h1>
-                        <h1 className="bg-neutral-400 rounded-lg px-5 py-2">Correct Answers: {score}</h1>
-                    </div>
-                    <div className="w-40 h-40 my-4 flex items-center justify-center">
-                        <CircularProgressbar
-                            value={calculatedScore}
-                            text={`${calculatedScore}%`}
-                            styles={buildStyles({
-                                textColor: '#000',
-                                pathColor: '#F59E0B',
-                                trailColor: '#FEE2E2',
-                                strokeLinecap: 'round',
-                                pathTransitionDuration: 0.5,
-                            })}
-                        />
-                    </div>
-                    <h1>Your Score</h1>
+                <div>
+                    <Result score={score} calculatedScore={calculatedScore} handleHome={handleHome}/>
                 </div>
             )}
         </div>

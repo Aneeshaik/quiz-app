@@ -4,8 +4,9 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
-const mockData = require('./src/Data/mockData')
+// const mockData = require('./src/Data/mockData')
 const connectDB = require('./db');
+const Question = require('./src/models/Question')
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const User = require('./src/models/User')
@@ -38,8 +39,16 @@ app.get('/', (req, res) => {
     res.send('Backend rendered')
 })
 
-app.get('/mockdata', (req, res) => {
-    res.json(mockData)
+app.get('/mockdata', async (req, res) => {
+    try {
+        const mockData = await Question.find();
+        if (!mockData) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(mockData);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
 })
 
 app.get('/users/:id', async(req,res) => {
@@ -143,9 +152,9 @@ app.post('/signup', async(req, res) => {
     }
 })
 
-app.get('/mockdata/:id', (req, res) => {
+app.get('/mockdata/:id', async (req, res) => {
     const id = parseInt(req.params.id);
-    const data = mockData.filter(item => item.id === id); // Find the data with the matching id
+    const data = await Question.find({ id: id }) // Find the data with the matching id
 
     if (data) {
         res.json(data); // If data is found, return it as JSON
@@ -153,8 +162,6 @@ app.get('/mockdata/:id', (req, res) => {
         res.status(404).json({ error: 'Data not found' }); // If not found, return a 404 error
     }
 })
-
-console.log(mockData);
 
 
 app.listen(PORT, () => {

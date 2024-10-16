@@ -30,6 +30,11 @@ const Profile = () => {
         }
     }, [user]);
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.reload();
+    }
+
     const filteredResults = user ? resultData.filter(result => result.name === user) : [];
     const sortedResults = filteredResults.sort((a, b) => b.score - a.score);
 
@@ -44,25 +49,26 @@ const Profile = () => {
             {sortedResults.length === 0? (
                 <div className="text-center text-xl mt-5 font-medium text-red-400">You haven't taken any quizzes yet! Start your first quiz to see your results here.</div>
             ) : ( <>
-            <h1 className="text-2xl font-semibold text-left">Your Quiz Results</h1>
-            <div className="flex items-center justify-center">
-                <table className="border-collapse border border-gray-500 w-full mt-5" cellPadding="10" cellSpacing="0">
-                <thead className="border border-b border-gray-500 text-xl">
+            <h1 className="text-2xl font-semibold text-left mb-5">Your Quiz Results</h1>
+            <div className="flex items-center justify-center bg-black/80  dark:bg-white/80 p-2 rounded-2xl">
+                <table className="border-collapse bg-gray-900 border border-gray-500 w-full" cellPadding="10" cellSpacing="0">
+                <thead className="border border-b border-gray-500 text-2xl">
                     <tr>
-                        <th className="border border-gray-500 w-1/2 border-x">Category</th>
-                        <th>Score</th>
+                        <th className="border text-white border-gray-500 w-1/2 border-x">Category</th>
+                        <th className="text-white">Score</th>
                     </tr>
                 </thead>
                 <tbody>
                     {sortedResults.map((result, index) => (
                         <tr key={index}>
-                            <td className="border border-gray-500 w-1/2 border-x">{result.category}</td>
-                            <td className="border border-gray-500 w-1/2 border-x">{result.score}</td>
+                            <td className="border opacity-90 text-white border-gray-500 w-1/2 border-x">{result.category}</td>
+                            <td className="border opacity-90 text-white border-gray-500 w-1/2 border-x">{result.score}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             </div>
+            <button className="bg-red-700 rounded-lg text-lg px-5 py-1 mt-3 hover:scale-102 active:scale-[0.98] transition-all duration-300 mb-4" onClick={() => {handleLogout()}}>LogOut</button>
             </>
             )}
             </>
