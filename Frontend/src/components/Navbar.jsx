@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
     const [user, setUser] = useState() 
     const fetchUserData = async() => {
-      const response =  await fetch(`http://localhost:5000/users/${localStorage.getItem("userId")}`)
+      const response =  await fetch(`https://quiz-app-bv7l.onrender.com/users/${localStorage.getItem("userId")}`)
       const jsonData = await response.json();
       setUser(jsonData.userType)
     }

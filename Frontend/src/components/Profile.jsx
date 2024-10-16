@@ -6,7 +6,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(true); 
 
     const fetchResultsData = async() => {
-        const response = await fetch("http://localhost:5000/results")
+        const response = await fetch("https://quiz-app-bv7l.onrender.com/results")
         const jsonData = await response.json()
         setResultData(jsonData)
     }
@@ -15,7 +15,7 @@ const Profile = () => {
     },[])
     useEffect(() => {
         const getUserName = async () => {
-            const response = await fetch(`http://localhost:5000/users/${localStorage.getItem('userId')}`);
+            const response = await fetch(`https://quiz-app-bv7l.onrender.com/users/${localStorage.getItem('userId')}`);
             const data = await response.json();
             // console.log(data);
             setUser(data.name);
