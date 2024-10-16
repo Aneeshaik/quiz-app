@@ -10,9 +10,9 @@ This is a full-stack Quiz App project that allows users to answer questions, tra
 - [Demo](#demo)
 - [Features](#features)
 - [Technologies](#technologies)
-- [Setup](#setup)
 - [Frontend](#frontend)
 - [Backend](#backend)
+- [Setup](#setup)
 
 ## Demo
 
@@ -92,4 +92,4 @@ npm start
 The frontend will run on ``` http://localhost:3000 ```.
 
 ### 4. Open the App
-Now, go to ``` http://localhost:3000 ``` to access the frontend. The backend will be running on http://localhost:5000 for API requests.
+Now, go to ``` http://localhost:3000 ``` to access the frontend. The backend will be running on ``` http://localhost:5000 ``` for API requests.
