@@ -1,16 +1,18 @@
 require('dotenv').config()
 const mongoose = require('mongoose');
 const mongodb = require('mongodb');
+// const { MongoClient, ServerApiVersion } = require('mongodb')
+const uri = process.env.MONGODB_URL
 
-// Connection URL for local MongoDB
-const dbURL = 'mongodb://localhost:27017/quiz-app-users'; // Change 'mydatabase' to your database name
-
-// Connecting to MongoDB
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const connectDB = async() => {
-    mongoose.connect(dbURL)
-        .then(() => console.log('Connected to MongoDB...'))
-        .catch(err => console.error('Failed to connect to MongoDB:', err));
+    console.log("connectDB called..."); 
+  try {
+    await mongoose.connect(uri);
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } catch(error) {
+    console.log("Error connecting to MongoDB", error);
+  }
 }
-
 
 module.exports = connectDB

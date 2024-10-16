@@ -11,10 +11,12 @@ const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const User = require('./src/models/User')
 const Result = require('./src/models/Result')
+const insertData = require('./src/Data/mockData')
 const PORT = process.env.PORT || 5000
 const app = express();
 dotenv.config();
 connectDB();
+insertData();
 
 app.use(bodyParser.urlencoded({extended: true}));
 const corsOptions = {

@@ -807,9 +807,9 @@ const mockData = [
   } catch (error) {
     console.error('Error inserting data:', error);
   } finally {
-    mongoose.connection.close();
+    // mongoose.connection.close();
   }
 }
 
-insertData();
+module.exports = insertData
 // module.exports = mockData
