@@ -7,12 +7,14 @@ const Home = () => {
     const [qnData, setQnData] = useState([])
     const [selectCategory, setSelectCategory] = useState(false)
     const [score, setScore] = useState(0)
+    const [user, setUser] = useState()
     const [isQuizCompleted, setIsQuizCompleted] = useState(false)
     const [showQns, setShowQns] = useState(false)
     const [currentQnIndex, setCurrentQnIndex] = useState(0); // Track the current question index
     const [shuffledAnswers, setShuffledAnswers] = useState([]);
     const [selectedAnswer, setSelectedAnswer] = useState();
     const [answered, setAnswered] = useState(false)
+    const [selectedCat, setSelectedCat] = useState();
     const [calculatedScore, setCalculatedScore] = useState(0)
 
     const categories = [
@@ -22,6 +24,15 @@ const Home = () => {
         'Sports',
         'History',
         'Animals'
+    ]
+
+    const categoriesColors = [
+        'bg-blue-500',
+        'bg-green-500',
+        'bg-yellow-500',
+        'bg-red-500',
+        'bg-purple-500',
+        'bg-orange-500'
     ]
 
     const questionsData = async() => {
@@ -47,8 +58,12 @@ const Home = () => {
     const handleClick = async(index) => {
         const response = await fetch(`http://localhost:5000/mockdata/${index}`)
         const jsonData = await response.json()
+        setSelectedCat(categories[index - 1])
+        console.log(selectedCat);
+        
         setShowQns(true);
         setQnData(jsonData)
+        console.log(jsonData[0]);
         setSelectCategory(true)
         if (jsonData.length > 0) {
             const firstQuestion = jsonData[0]; // Assuming you want to shuffle answers for the first question initially
@@ -70,14 +85,28 @@ const Home = () => {
         }
     }, [qnData, currentQnIndex]);
 
-    const handleNext = () => {
+    const handleNext = async () => {
         setSelectedAnswer(null)
         setAnswered(false)
         if (currentQnIndex < qnData.length - 1){
             setCurrentQnIndex(currentQnIndex + 1)
         } else {
+            if (!isQuizCompleted) {
             setIsQuizCompleted(true)
             calculateScore(10, score);
+            const response = await fetch('http://localhost:5000/results', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: user,
+                    category: selectedCat,
+                    score: score
+                }),
+            })
+            const data = await response.json();
+        }
         }
     }
 
@@ -92,9 +121,9 @@ const Home = () => {
         if (selectedOption === currentQn.correct_answer) {
             setScore(score + 1); // Increment score if the selected answer is correct
         }
-        setTimeout(() => {
-            handleNext()
-        }, 2000)
+        // setTimeout(() => {
+        //     handleNext()
+        // }, 2000)
         // handleNext(); // Move to the next question
     };
 
@@ -125,19 +154,27 @@ const Home = () => {
           setCalculatedScore(0);
         }
         setCalculatedScore( Number(((correctAnswers * 100) / totalQuestions).toFixed(2)) );
-      };
-      
+    };
+    useEffect(() => {
+        const getUserName = async () => {
+            const response = await fetch(`http://localhost:5000/users/${localStorage.getItem('userId')}`);
+            const data = await response.json();
+            // console.log(data);
+            setUser(data.name);
+        }
+        getUserName();
+    },[])
 
 
     return (
-        <div className="flex items-center justify-center -mt-10 w-1/2 mx-auto">
+        <div className="flex items-center justify-center bg-white/15 backdrop-blur-sm p-5 rounded-2xl w-4/5 mx-auto">
         <div className="w-full">
-            <div className="w-3/4 mx-auto">
+            <div className="w-full mx-auto">
                 {!selectCategory && <div>
-                    <p className="font-semibold text-xl">Select a Quiz Category</p>
+                    <p className="font-semibold text-3xl">Select a Quiz Category</p>
                     <ul className="flex flex-wrap justify-center items-center m-3">
                         {categories.map((cat, index) => (
-                            <button key={index} onClick={() => handleClick(index + 1)} className="bg-slate-500 p-5 rounded-lg w-1/4 h-24 m-2 hover:scale-102 transition-all duration-300 active:scale-[0.97]">{cat}</button>
+                            <button key={index} onClick={() => handleClick(index + 1)} className={`${categoriesColors[index]} text-lg p-5 rounded-lg w-1/4 h-24 m-2 hover:scale-102 transition-all duration-300 active:scale-[0.97] shrink-0`}>{cat}</button>
                         ))}
                     </ul>
                 </div>}
@@ -170,7 +207,7 @@ const Home = () => {
                         ))} */}
                         <div className="flex justify-between">
                             <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleBack()}>Categories</button>
-                            <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleNext()}>Next</button>
+                            <button className="px-5 py-2 m-2 rounded-lg bg-blue-500 hover:scale-102 active:scale-[0.98] transition-all duration-300" onClick={() => handleNext()}> {currentQnIndex < qnData.length - 1 ? 'Next' : 'Submit'} </button>
                         </div>
                     </div>
                 </div>

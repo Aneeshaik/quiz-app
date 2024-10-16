@@ -6,19 +6,52 @@ const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const mockData = require('./src/Data/mockData')
 const connectDB = require('./db');
+const dotenv = require('dotenv')
+const bodyParser = require('body-parser')
 const User = require('./src/models/User')
+const Result = require('./src/models/Result')
 const PORT = process.env.PORT || 5000
 const app = express();
-app.use(cors())
+dotenv.config();
+connectDB();
+
+app.use(bodyParser.urlencoded({extended: true}));
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    credentials: true,
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
+
+app.use(express.json()); 
 
 app.get('/', (req, res) => {
     res.send('Backend rendered')
 })
 
-connectDB();
-
 app.get('/mockdata', (req, res) => {
     res.json(mockData)
+})
+
+app.get('/users/:id', async(req,res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
 })
 
 const authMiddleware = (req, res, next) => {
@@ -59,12 +92,34 @@ app.post('/signin', async(req, res) => {
     }
 })
 
+app.post('/results', async(req, res) => {
+    const { name, category, score } = req.body;
+    try{
+        const result = new Result({
+            name,
+            category,
+            score
+        })
+        await result.save()
+        res.status(201).json({message: "Successfully added result!"})
+    }
+    catch(error){
+        res.status(500).json({message: "Adding result Failed"})
+        console.error(error)
+    }
+})
+
+app.get('/results', async(req, res) => {
+    const results = await Result.find()
+    res.json(results)
+})
+
 app.get('/auth/check', authMiddleware, (req, res, next) => {
-    res.json({isRegistered: true})
+    res.json({isLoggedIn: true})
 })
 
 app.post('/signup', async(req, res) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { name, email, password, userType } = req.body;
     try{
         const existedUser = await User.findOne({email})
         if(existedUser) {
@@ -72,8 +127,7 @@ app.post('/signup', async(req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({
-            firstName,
-            lastName,
+            name,
             email,
             password: hashedPassword,
             userType
