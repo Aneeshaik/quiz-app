@@ -43,7 +43,7 @@ const App = () => {
       }, []);
     
       if(isLoading){
-        return <div>Loading....</div>
+        return <div className="text-center text-xl mt-5 animate-pulse font-medium">Please wait a moment...</div>
       }
   return (
     <div className="App w-[95%] lg:w-1/2 mx-auto relative h-screen flex flex-col">
