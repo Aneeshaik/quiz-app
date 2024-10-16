@@ -54,3 +54,42 @@ To get the app running locally, follow these instructions:
 ```bash
 git clone https://github.com/yourusername/quiz-app.git
 cd quiz-app
+```
+### 2. Install Dependencies
+You need to install dependencies for both the frontend/ and backend/ folders.
+
+**Backend (Node.js + Express)**
+```
+cd backend
+npm install
+```
+**Create a .env file in the backend directory and add the following:**
+```
+PORT=5000
+MONGODB_URL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+```
+**Frontend (React)**
+```
+cd ../frontend
+npm install
+```
+### 3. Running the App
+**Start the Backend**
+In the backend/ folder, start the server:
+```
+cd backend
+npm start
+```
+The backend will run on ``` http://localhost:5000 ```.
+
+**Start the Frontend**
+In the frontend/ folder, start the React app:
+```
+cd ../frontend
+npm start
+```
+The frontend will run on ``` http://localhost:3000 ```.
+
+### 4. Open the App
+Now, go to ``` http://localhost:3000 ``` to access the frontend. The backend will be running on http://localhost:5000 for API requests.
