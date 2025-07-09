@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Result from "./Result";
 
 const Home = () => {
+    // const [data, setData] = useState([]);
     const [qnData, setQnData] = useState([])
     const [selectCategory, setSelectCategory] = useState(false)
     const [score, setScore] = useState(0)
@@ -32,6 +33,13 @@ const Home = () => {
         'bg-purple-500',
         'bg-orange-500'
     ]
+
+    const questionsData = async() => {
+        const response =await fetch(`${process.env.REACT_APP_BACKEND_URL}/mockdata/`);
+    }
+    useEffect(() => {
+        questionsData();
+    },[])
 
     const shuffleAnswers = (option1, options) => {
         const answers = [option1, ...options]
