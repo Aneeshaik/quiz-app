@@ -35,7 +35,7 @@ const Home = () => {
     ]
 
     const questionsData = async() => {
-        const response =await fetch('https://quiz-app-bv7l.onrender.com/mockdata/');
+        const response =await fetch(`${process.env.REACT_APP_BACKEND_URL}/mockdata/`);
         const jsonData = await response.json();
         setData(jsonData);
     }
@@ -55,7 +55,7 @@ const Home = () => {
     }
 
     const handleClick = async(index) => {
-        const response = await fetch(`https://quiz-app-bv7l.onrender.com/mockdata/${index}`)
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/mockdata/${index}`)
         const jsonData = await response.json()
         setSelectedCat(categories[index - 1])
         console.log(selectedCat);
@@ -93,7 +93,7 @@ const Home = () => {
             if (!isQuizCompleted) {
             setIsQuizCompleted(true)
             calculateScore(10, score);
-            const response = await fetch('https://quiz-app-bv7l.onrender.com/results', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/results`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ const Home = () => {
     };
     useEffect(() => {
         const getUserName = async () => {
-            const response = await fetch(`https://quiz-app-bv7l.onrender.com/users/${localStorage.getItem('userId')}`);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${localStorage.getItem('userId')}`);
             const data = await response.json();
             // console.log(data);
             setUser(data.name);
