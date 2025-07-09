@@ -34,13 +34,6 @@ const Home = () => {
         'bg-orange-500'
     ]
 
-    const questionsData = async() => {
-        const response =await fetch(`${process.env.REACT_APP_BACKEND_URL}/mockdata/`);
-    }
-    useEffect(() => {
-        questionsData();
-    },[])
-
     const shuffleAnswers = (option1, options) => {
         const answers = [option1, ...options]
         for(let i = answers.length - 1; i > 0; i--){
