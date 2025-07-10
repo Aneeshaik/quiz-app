@@ -18,7 +18,7 @@ const App = () => {
         
         if (storedToken) {
             try{
-                const response = await fetch('https://quiz-app-bv7l.onrender.com/auth/check', {
+                const response = await fetch('https://quiz-app-api-umber.vercel.app/auth/check', {
                     headers:{
                         'Authorization': `Bearer ${storedToken}`
                     }
