@@ -149,7 +149,7 @@ app.post('/signup', async(req, res) => {
         res.status(201).json({message: "Successfully Registered!", token, userId})
     }
     catch(error){
-        res.status(500).json({message: "Registration Failed"})
+        res.status(500).json({message: "Registration Failed", 'error': error})
         console.error(error)
     }
 })
